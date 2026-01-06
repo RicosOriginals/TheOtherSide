@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<title>The Other Side</title>
+
+<style>
+    body {
+        margin: 0;
+        background: radial-gradient(circle at center, #120000, #000000 70%);
+        color: #e60000;
+        font-family: "Arial Black", Arial, sans-serif;
+        overflow: hidden;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        transition: background 2s;
+    }
+
+    .screen {
+        text-align: center;
+        opacity: 1;
+        transition: opacity 1.5s ease;
+    }
+
+    h1 {
+        font-size: 64px;
+        letter-spacing: 6px;
+        margin-bottom: 20px;
+        text-shadow: 0 0 25px red;
+        animation: slowFlicker 4s infinite;
+    }
+
+    #timer {
+        font-size: 90px;
+        font-weight: bold;
+        letter-spacing: 4px;
+        text-shadow: 0 0 30px red;
+    }
+
+    .hidden {
+        opacity: 0;
+        pointer-events: none;
+    }
+
+    .message {
+        font-size: 48px;
+        opacity: 0;
+        transition: opacity 1.5s;
+        text-shadow: 0 0 20px red;
+    }
+
+    .message.show {
+        opacity: 1;
+    }
+
+    .link {
+        margin-top: 30px;
+        font-size: 20px;
+        color: #ff4444;
+        text-decoration: none;
+        border-bottom: 1px solid #ff4444;
+        transition: 0.3s;
+    }
+
+    .link:hover {
+        color: white;
+        border-color: white;
+    }
+
+    @keyframes slowFlicker {
+        0% { opacity: 1; }
+        6% { opacity: 0.7; }
+        12% { opacity: 1; }
+        18% { opacity: 0.5; }
+        24% { opacity: 1; }
+        100% { opacity: 1; }
+    }
+</style>
+</head>
+
+<body>
+
+<div class="screen" id="countdownScreen">
+    <h1>THE OTHER SIDE</h1>
+    <div id="timer">00:00:00</div>
+</div>
+
+<div class="screen hidden" id="readyScreen">
+    <div class="message" id="readyText">Bist du bereit?</div>
+</div>
+
+<div class="screen hidden" id="linkScreen">
+    <div class="message show">
+        Drücke auf den Link<br>und gehe auf Folge 1
+    </div>
+    <a class="link"
+       href="https://www.youtube.com/playlist?list=PLERxJTeusOjQGRYp8-6yHoj72OZGHl1aa"
+       target="_blank">
+       ▶ Zur Playlist
+    </a>
+</div>
+
+<script>
+    /* 🕰️ HIER DEIN DATUM SETZEN */
+    const targetDate = new Date("2026-01-06T20:00:00").getTime();
+
+    const timerEl = document.getElementById("timer");
+    const countdownScreen = document.getElementById("countdownScreen");
+    const readyScreen = document.getElementById("readyScreen");
+    const readyText = document.getElementById("readyText");
+    const linkScreen = document.getElementById("linkScreen");
+
+    function updateCountdown() {
+        const now = Date.now();
+        const distance = targetDate - now;
+
+        if (distance <= 0) {
+            clearInterval(countdownInterval);
+            startReveal();
+            return;
+        }
+
+        const h = Math.floor(distance / (1000 * 60 * 60));
+        const m = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        const s = Math.floor((distance % (1000 * 60)) / 1000);
+
+        timerEl.textContent =
+            String(h).padStart(2, "0") + ":" +
+            String(m).padStart(2, "0") + ":" +
+            String(s).padStart(2, "0");
+    }
+
+    const countdownInterval = setInterval(updateCountdown, 1000);
+
+    function startReveal() {
+        countdownScreen.classList.add("hidden");
+
+        setTimeout(() => {
+            readyScreen.classList.remove("hidden");
+            readyText.classList.add("show");
+        }, 1500);
+
+        setTimeout(() => {
+            readyScreen.classList.add("hidden");
+        }, 4500);
+
+        setTimeout(() => {
+            linkScreen.classList.remove("hidden");
+        }, 6000);
+    }
+</script>
+
+</body>
+</html>
